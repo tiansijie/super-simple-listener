@@ -6,17 +6,21 @@ module.exports = class Listener {
 
 	subscribe(name, func) {
 		if (typeof func !== "function") {
-			return new Error("Second args must be an function");
+			return new Error("Second args must be a function");
 		}
 
 		if (!this.subscriptions[name]) {
 			this.subscriptions[name] = [];
 		}
 
-		this.subscriptions[name].push(func);
+		const cloneFunc = function(val) {
+			return func(val);
+		};
+
+		this.subscriptions[name].push(cloneFunc);
 
 		return function unsubscribe() {
-			const index = this.subscriptions[name].indexOf(func);
+			const index = this.subscriptions[name].indexOf(cloneFunc);
 			if (index !== -1) {
 				this.subscriptions[name].splice(index, 1);
 			}
