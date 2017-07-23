@@ -19,12 +19,13 @@ module.exports = class Listener {
 
 		this.subscriptions[name].push(cloneFunc);
 
-		return function unsubscribe() {
+		return () => {
+			//unsubscribe single
 			const index = this.subscriptions[name].indexOf(cloneFunc);
 			if (index !== -1) {
 				this.subscriptions[name].splice(index, 1);
 			}
-		}.bind(this);
+		};
 	}
 
 	emit(name, value) {
